@@ -1,5 +1,5 @@
 # Turnips
-Turnips script for Streamlabs Chatbot  
+**Turnips script for Streamlabs Chatbot**
 *special thanks to twitch.tv/hypherius for the idea*
 
 ## Command Usage
