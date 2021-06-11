@@ -7,7 +7,7 @@ import os
 ScriptName = "Turnips"
 Description = "Adds the stock market to your bot"
 Creator = "Octahedron#5752"
-Version = "1.0.0"
+Version = "1.0.1"
 SpecialThanks = "https://www.twitch.tv/hypherius"
 Website = ""
 
@@ -41,9 +41,9 @@ def Execute(data):
     if (command == "!turnips") or (command == "!turnip"):
         jsonData = readJson()
         verifyTurnipBalance(data.User)
-        turnipBalance = json.dumps(jsonData['userBalances'][data.User])
+        turnipBalance = jsonData['userBalances'][data.User]
         userBalance = Parent.GetPoints(data.User)
-        turnipPrice = json.dumps(jsonData["turnips"]["price"])
+        turnipPrice = jsonData["turnips"]["price"]
         lastUpdated = jsonData["turnips"]["lastUpdated"]
         nextUpdate = lastUpdated + PriceTimer
         currentTime = int(round(time.time() * 1000))
@@ -51,11 +51,14 @@ def Execute(data):
         minutesUntilUpdate = int(math.floor(secondsUntilUpdate / 60))
         secondsUntilUpdate = secondsUntilUpdate - minutesUntilUpdate * 60
 
-        if (data.GetParam(1).lower() == "balance"):
-            Parent.SendStreamMessage("You have " + turnipBalance + " turnips!");
+        if (data.GetParam(1) == "") or (data.GetParam(1).lower() == "help"):
+            Parent.SendStreamMessage("Check out the Turnips readme: https://github.com/OctahedronV2/Turnips/blob/main/README.md!")
+
+        elif (data.GetParam(1).lower() == "balance"):
+            Parent.SendStreamMessage("You have " + str(turnipBalance) + " turnips!");
 
         elif (data.GetParam(1).lower() == "price") or (data.GetParam(1).lower() == "value"):
-            Parent.SendStreamMessage("Turnips are currently worth " + turnipPrice + " Trashbucks! The price will update in: " + str(minutesUntilUpdate) + "m " + str(secondsUntilUpdate) + "s ");
+            Parent.SendStreamMessage("Turnips are currently worth " + str(turnipPrice) + " Trashbucks! The price will update in: " + str(minutesUntilUpdate) + "m " + str(secondsUntilUpdate) + "s ");
 
         elif data.GetParam(1).lower() == "buy":
             if data.GetParam(2).lower() == "max":
@@ -79,7 +82,7 @@ def Execute(data):
             else:
                 Parent.SendStreamMessage("You cannot afford that many turnips.")
 
-        elif data.GetParam(2).lower() == "sell":
+        elif data.GetParam(1).lower() == "sell":
             if data.GetParam(2).lower() == "all":
                 quantity = userBalance
             else:
