@@ -1,0 +1,27 @@
+{
+    "output_file": "settings.json",
+    "Command": {
+      "type": "textbox",
+      "value": "!turnips",
+      "label": "Command",
+      "tooltip": "The command that will be responded to.",
+      "group": "Core"
+    },
+    "Cooldown": {
+      "type": "slider",
+      "value": 4,
+      "min": 1,
+      "max": 100,
+      "ticks": 1,
+      "label": "Cooldown (seconds)",
+      "tooltip": "How long the command should go on cooldown for",
+      "group": "Core"
+    },
+    "HelpMessage": {
+      "type": "textbox",
+      "value": "Check out the Turnips readme: https://github.com/OctahedronV2/Turnips/blob/main/README.md!",
+      "label": "Help Message",
+      "tooltip": "What the help command will respond to",
+      "group": "Messages"
+    }
+  }
