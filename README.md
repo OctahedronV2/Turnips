@@ -1,5 +1,6 @@
 # Turnips
 Turnips script for Streamlabs Chatbot
+*special thanks to twitch.tv/hypherius for the idea*
 
 ## Command Usage
 All commands can be used with either !turnip or !turnips
