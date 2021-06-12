@@ -39,31 +39,31 @@
 ### Custom Messages  
   
 **Help Message** - The message displayed when the user uses *!turnips help* or *!turnips*.  
-*Compatible Variables: user, currencyName, customCurrencyName*
+*Compatible Variables: user, currencyName, customCurrencyName*  
 
-**Cooldown Message** - The message displayed when the user is still on cooldown.
-*Compatible Variables: user, currencyName, customCurrencyName, cooldown*
+**Cooldown Message** - The message displayed when the user is still on cooldown.  
+*Compatible Variables: user, currencyName, customCurrencyName, cooldown*  
 
-**Balance Check Message** - The message displayed when the user uses *!turnips balance*
-*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate*
+**Balance Check Message** - The message displayed when the user uses *!turnips balance*  
+*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate*  
 
 **Turnip Value Message** - The message displayed when the user uses *!turnips value*.  
-*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate*
+*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate*  
 
 **Turnip Buy Message** - The message displayed when the user successfully uses *!turnips buy*.  
-*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate, quantity, price*
+*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate, quantity, price*  
 
 **Too Expensive Message** - The message displayed when the user tries to buy more turnips than they can afford.  
-*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate*
+*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate*  
 
 **Sell Message** - The message displayed when the user successfully uses *!turnips sell*.  
-*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate, quantity, value*
+*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate, quantity, value*  
 
 **Not Enough Turnips Message** - The message displayed when the user tries to sell more turnips than they have.  
-*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate*
+*Compatible Variables: user, currencyName, customCurrencyName, turnipValue, userTurnipBalance, timeUntilPriceUpdate*  
 
 **Invalid Amount Message** - The message displayed when the user inputs an invalid number amount like *-1* or *asdf*.  
-*Compatible Variables: user, currencyName, customCurrencyName*
+*Compatible Variables: user, currencyName, customCurrencyName*  
 
 **Price Update Message** - The message displayed when the turnip price updates.  
-*Compatible Variables: turnipValue*
+*Compatible Variables: turnipValue*  
