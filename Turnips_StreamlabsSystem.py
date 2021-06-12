@@ -162,8 +162,11 @@ def Execute(data):
             message = ScriptSettings.ValueMessage
 
         elif data.GetParam(1).lower() == "buy":
-            if data.GetParam(2).lower() == "max":
+            if data.GetParam(2).lower() == "max" or data.GetParam(2).lower() == "all":
                 quantity = int(math.floor(userBalance / turnipPrice))
+                if quantity == 0:
+                    Parent.SendStreamMessage("You cannot afford any turnips!") # TODO: make this message customizable
+                    return
             else:
                 try:
                     if int(data.GetParam(2)) < 1:
@@ -187,8 +190,12 @@ def Execute(data):
                 message = ScriptSettings.TooExpensiveMessage
 
         elif data.GetParam(1).lower() == "sell":
-            if data.GetParam(2).lower() == "all":
-                quantity = turnipBalance
+            if data.GetParam(2).lower() == "all" or data.GetParam(2).lower() == "max":
+                if turnipBalance > 0:
+                    quantity = turnipBalance
+                else:
+                    Parent.SendStreamMessage("You do not have any turnips!") # TODO: make this message customizable
+                    return
             else:
                 try:
                     if int(data.GetParam(2)) < 1:
