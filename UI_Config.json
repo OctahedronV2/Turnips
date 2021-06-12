@@ -7,6 +7,42 @@
       "tooltip": "The command that will be responded to.",
       "group": "Core"
     },
+    "CurrencyName": {
+      "type": "textbox",
+      "value": "turnips",
+      "label": "Currency Name",
+      "tooltip": "The name of the new currency",
+      "group": "Core"
+    },
+    "PriceUpdateFrequency": {
+      "type": "numberbox",
+      "value": 2,
+      "label": "Price Update Timer",
+      "tooltip": "How often the turnip price will update.",
+      "group": "Prices"
+    },
+    "PriceUpdateUnit": {
+      "type": "dropdown",
+      "value": "Hours",
+      "items": ["Milliseconds", "Seconds", "Minutes", "Hours", "Days"],
+      "label": "Unit",
+      "tooltip": "The unit of time for the Price Update Timer.",
+      "group": "Prices"
+    },
+    "MinValue": {
+      "type": "numberbox",
+      "value": 5,
+      "label": "Min Value",
+      "tooltip": "The minimum random cost of the turnips.",
+      "group": "Prices"
+    },
+    "MaxValue": {
+      "type": "numberbox",
+      "value": 50,
+      "label": "Max Value",
+      "tooltip": "The maximum random cost of the turnips.",
+      "group": "Prices"
+    },
     "Cooldown": {
       "type": "slider",
       "value": 4,
@@ -19,9 +55,72 @@
     },
     "HelpMessage": {
       "type": "textbox",
-      "value": "Check out the Turnips readme: https://github.com/OctahedronV2/Turnips/blob/main/README.md!",
+      "value": "Hey ${user}, check out the Turnips readme for help: https://github.com/OctahedronV2/Turnips/blob/main/README.md",
       "label": "Help Message",
-      "tooltip": "What the help command will respond to",
+      "tooltip": "The message that is sent when the help command is run.",
+      "group": "Messages"
+    },
+    "CooldownMessage": {
+      "type": "textbox",
+      "value": "You are on cooldown for this command for another: ${cooldown}",
+      "label": "Cooldown Message",
+      "tooltip": "The message that is sent when the user is still on cooldown.",
+      "group": "Messages"
+    },
+    "BalanceMessage": {
+      "type": "textbox",
+      "value": "You have ${userTurnipBalance}.",
+      "label": "Balance Check Message",
+      "tooltip": "The message that is sent when the balance command is ran.",
+      "group": "Messages"
+    },
+    "ValueMessage": {
+      "type": "textbox",
+      "value": "Turnips are currently worth ${turnipValue}! This price will update in: ${timeUntilPriceUpdate}",
+      "label": "Turnip Value Message",
+      "tooltip": "The message that is sent when the value command is ran.",
+      "group": "Messages"
+    },
+    "BuyMessage": {
+      "type": "textbox",
+      "value": "Successfully purchased ${quantity} for ${price}!",
+      "label": "Turnip Buy Message",
+      "tooltip": "The message that is sent when the buy command is successful.",
+      "group": "Messages"
+    },
+    "TooExpensiveMessage": {
+      "type": "textbox",
+      "value": "You cannot afford that many turnips.",
+      "label": "Too Expensive Message",
+      "tooltip": "The message that is sent when the balance command is ran.",
+      "group": "Messages"
+    },
+    "SellMessage": {
+      "type": "textbox",
+      "value": "Successfully sold ${quantity} for ${value}!",
+      "label": "Sell Message",
+      "tooltip": "The message that is sent when the sell command is successful.",
+      "group": "Messages"
+    },
+    "NotEnoughTurnipsMessage": {
+      "type": "textbox",
+      "value": "You do not have that many turnips.",
+      "label": "Not Enough Turnips Message",
+      "tooltip": "The message that is sent when the user tries to sell more turnips than they have.",
+      "group": "Messages"
+    },
+    "InvalidAmountMessage": {
+      "type": "textbox",
+      "value": "That is not a valid amount.",
+      "label": "Invalid Amount Message",
+      "tooltip": "The message that is sent when the user puts in an invalid amount for any command.",
+      "group": "Messages"
+    },
+    "PriceUpdateMessage": {
+      "type": "textbox",
+      "value": "Turnip prices have updated! New price: ${turnipValue}",
+      "label": "Price Update Message",
+      "tooltip": "The message that is sent when the turnip price updates.",
       "group": "Messages"
     }
   }

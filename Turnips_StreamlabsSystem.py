@@ -21,14 +21,13 @@ clr.AddReference("IronPython.Modules.dll")
 ScriptName = "Turnips"
 Description = "Adds the stock market to your bot."
 Creator = "Octahedron"
-Version = "1.0.1"
+Version = "1.1.0"
 SpecialThanks = "https://www.twitch.tv/hypherius"
-Website = ""
+Website = "https://github.com/OctahedronV2/Turnips"
 
 settingsfile = os.path.join(os.path.dirname(__file__), "settings.json")
 
 JsonFile = os.path.join(os.path.dirname(__file__), "turnips.json")
-PriceTimer = 15 * 60 * 1000 # 15 minutes
 
 class Settings(object):
     """ Load in saved settings file if available else set default values. """
@@ -42,6 +41,21 @@ class Settings(object):
             self.Command = "!turnips"
             self.Cooldown = 4
             self.HelpMessage = "Check out the Turnips readme: https://github.com/OctahedronV2/Turnips/blob/main/README.md!"
+            self.CurrencyName = "turnips"
+            self.PriceUpdateFrequency = 2
+            self.PriceUpdateUnit = "Hours"
+            self.MinValue = 5
+            self.MaxValue = 50
+            self.HelpMessage = "Hey ${user}, check out the Turnips readme for help: https://github.com/OctahedronV2/Turnips/blob/main/README.md"
+            self.CooldownMessage = "You are on cooldown for this command for another: ${cooldown}"
+            self.BalanceMessage = "You have ${userTurnipBalance}."
+            self.ValueMessage = "Turnips are currently worth ${turnipValue}! This price will update in: ${timeUntilPriceUpdate}"
+            self.BuyMessage = "Successfully purchased ${quantity} for ${price}!"
+            self.TooExpensiveMessage = "You cannot afford that many turnips."
+            self.SellMessage = "Successfully sold ${quantity} for ${value}!"
+            self.NotEnoughTurnipsMessage = "You do not have that many turnips."
+            self.InvalidAmountMessage = "That is not a valid amount."
+            self.PriceUppdateMessage = "Turnip prices have updated! New price: ${turnipValue}"
 
 	def Reload(self, jsondata):
 		""" Reload settings from Streamlabs user interface by given json data. """
@@ -72,11 +86,33 @@ def verifyTurnipBalance(user):
         jsonData['userBalances'][user] = 0
         writeJson(jsonData)
 
+def SendMessage(data, Message):
+    Message = Message.replace("${user}", data.UserName)
+    Message = Message.replace("${currencyName}", Parent.GetCurrencyName())
+    Message = Message.replace("${customCurrencyName}", ScriptSettings.CurrencyName)
+    Message = Message.replace("${cooldown}", str(Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command, data.User)) + " second" + ("s" if Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command, data.User) != 1 else ""))
+    Parent.SendStreamMessage(Message)
+
 def Init():
 
     global ScriptSettings
     ScriptSettings = Settings(settingsfile)
 
+    global PriceTimer
+
+    # time stuff
+    timeUnit = ScriptSettings.PriceUpdateUnit
+    timeAmount = ScriptSettings.PriceUpdateFrequency
+    if timeUnit == "Seconds":
+        PriceTimer = timeAmount * 1000
+    elif timeUnit == "Minutes":
+        PriceTimer = timeAmount * 1000 * 60
+    elif timeUnit == "Hours":
+        PriceTimer = timeAmount * 1000 * 60 * 60
+    elif timeUnit == "Days":
+        PriceTimer = timeAmount * 1000 * 60 * 60 * 24
+    else:
+        PriceTimer = timeAmount
     return
 
 def ReloadSettings(jsondata):
@@ -94,7 +130,7 @@ def Execute(data):
     if command == ScriptSettings.Command:
         if Parent.IsOnUserCooldown(ScriptName, ScriptSettings.Command, data.User):
             cooldown = Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command, data.User)
-            Parent.SendStreamMessage("You are on cooldown for this command for another: " + str(cooldown) + " second"  + ("s." if cooldown != 1 else "."))
+            SendMessage(data, ScriptSettings.CooldownMessage)
             return
         Parent.AddUserCooldown(ScriptName, ScriptSettings.Command, data.User, ScriptSettings.Cooldown)
         jsonData = readJson()
@@ -105,18 +141,25 @@ def Execute(data):
         lastUpdated = jsonData["turnips"]["lastUpdated"]
         nextUpdate = lastUpdated + PriceTimer
         currentTime = int(round(time.time() * 1000))
-        secondsUntilUpdate = int(math.floor((nextUpdate - currentTime) / 1000))
-        minutesUntilUpdate = int(math.floor(secondsUntilUpdate / 60))
-        secondsUntilUpdate = secondsUntilUpdate - minutesUntilUpdate * 60
+
+        secondsUntilUpdate = int(math.floor((nextUpdate - currentTime) / 1000)) # get in seconds
+        Parent.Log(ScriptSettings.Command, str(secondsUntilUpdate))
+        secondsUntilUpdate = secondsUntilUpdate % (24 * 3600)
+        hoursUntilUpdate = secondsUntilUpdate // 3600
+        secondsUntilUpdate %= 3600
+        minutesUntilUpdate = secondsUntilUpdate // 60
+        secondsUntilUpdate %= 60
+        quantity = 0
 
         if (data.GetParam(1) == "") or (data.GetParam(1).lower() == "help"):
-            Parent.SendStreamMessage(ScriptSettings.HelpMessage)
+            message = ScriptSettings.HelpMessage
 
         elif (data.GetParam(1).lower() == "balance"):
-            Parent.SendStreamMessage("You have " + str(turnipBalance) + " turnip" + ("s." if cooldown != 1 else "."));
+            message = ScriptSettings.BalanceMessage
+            # Parent.SendStreamMessage("You have " + str(turnipBalance) + " turnip" + ("s." if cooldown != 1 else "."));
 
         elif (data.GetParam(1).lower() == "price") or (data.GetParam(1).lower() == "value"):
-            Parent.SendStreamMessage("Turnips are currently worth " + str(turnipPrice) + " Trashbucks! The price will update in: " + str(minutesUntilUpdate) + "m " + str(secondsUntilUpdate) + "s ");
+            message = ScriptSettings.ValueMessage
 
         elif data.GetParam(1).lower() == "buy":
             if data.GetParam(2).lower() == "max":
@@ -124,11 +167,14 @@ def Execute(data):
             else:
                 try:
                     if int(data.GetParam(2)) < 1:
-                        Parent.SendStreamMessage("That is not a valid amount.")
+                        message = ScriptSettings.InvalidAmountMessage
+                        SendMessage(data, message)
+                        return
                     else:
                         quantity = int(data.GetParam(2))
                 except:
-                    Parent.SendStreamMessage("That is not a valid amount.")
+                    message = ScriptSettings.InvalidAmountMessage
+                    SendMessage(data, message)
                     return
 
             price = turnipPrice * quantity
@@ -136,37 +182,64 @@ def Execute(data):
                 jsonData["userBalances"][data.User] += quantity
                 writeJson(jsonData)
                 Parent.RemovePoints(data.User, data.UserName, price)
-                Parent.SendStreamMessage("Successfully purchased " + str(quantity) + (" turnips for " if quantity != 1 else " turnip for ") + str(price) + " Trashbucks!")
+                message = ScriptSettings.BuyMessage
             else:
-                Parent.SendStreamMessage("You cannot afford that many turnips.")
+                message = ScriptSettings.TooExpensiveMessage
 
         elif data.GetParam(1).lower() == "sell":
             if data.GetParam(2).lower() == "all":
-                quantity = userBalance
+                quantity = turnipBalance
             else:
                 try:
-                    if int(data.GetParam(2)) < 1:
-                        Parent.SendStreamMessage("That is not a valid amount.")
+                    if int(data.GetParam(2)):
+                        message = ScriptSettings.InvalidAmountMessage
+                        SendMessage(data, message)
+                        return
                     else:
                         quantity = int(data.GetParam(2))
                 except:
-                    Parent.SendStreamMessage("That is not a valid amount.")
+                    message = ScriptSettings.InvalidAmountMessage
+                    SendMessage(data, message)
                     return
 
             value = turnipPrice * quantity
-            if userBalance >= quantity:
+            if turnipBalance >= quantity:
                 jsonData["userBalances"][data.User] -= quantity
                 writeJson(jsonData)
                 Parent.AddPoints(data.User, data.UserName, value)
-                Parent.SendStreamMessage("Successfully sold " + str(quantity) + " turnips for " + str(value) + "!")
+                message = ScriptSettings.SellMessage
+            else:
+                message = ScriptSettings.NotEnoughTurnipsMessage
+        message = message.replace("${turnipValue}", str(turnipPrice) + " " + Parent.GetCurrencyName())
+        message = message.replace("${userTurnipBalance}", str(turnipBalance) + " " + ((ScriptSettings.CurrencyName + "s") if turnipBalance != 1 else ScriptSettings.CurrencyName))
+        message = message.replace("${timeUntilPriceUpdate}", str(hoursUntilUpdate) + "h " + str(minutesUntilUpdate) + "m " + str(secondsUntilUpdate) + "s ")
+        try:
+            message = message.replace("${quantity}", str(quantity) + " " + ((ScriptSettings.CurrencyName + "s") if quantity != 1 else ScriptSettings.CurrencyName))
+        except:
+            pass
+        try:
+            message = message.replace("${price}", str(price) + " " + Parent.GetCurrencyName())
+        except:
+            pass
+        try:
+            message = message.replace("${value}", str(value) + " " + Parent.GetCurrencyName())
+        except:
+            pass
+        SendMessage(data, message)
         return
 
 def Tick():
-    currentTime = int(round(time.time() * 1000))
-    jsonData = readJson()
-    if currentTime - jsonData["turnips"]["lastUpdated"] > PriceTimer:
-        jsonData["turnips"]["price"] = random.randint(50, 500)
-        jsonData["turnips"]["lastUpdated"] = currentTime
-        writeJson(jsonData)
-        Parent.SendStreamMessage("Turnip prices have updated! New price: " + str(jsonData["turnips"]["price"]) + " Trashbucks.")
+    try:
+        currentTime = int(round(time.time() * 1000))
+        jsonData = readJson()
+        if currentTime - jsonData["turnips"]["lastUpdated"] > PriceTimer:
+            jsonData["turnips"]["price"] = random.randint(ScriptSettings.MinValue, ScriptSettings.MaxValue)
+            jsonData["turnips"]["lastUpdated"] = currentTime
+            writeJson(jsonData)
+            turnipPrice = jsonData["turnips"]["price"]
+            message = ScriptSettings.PriceUpdateMessage
+            message = message.replace("${turnipValue}", str(turnipPrice) + " " + Parent.GetCurrencyName())
+            Parent.SendStreamMessage(message)
+    except:
+        pass
     pass
