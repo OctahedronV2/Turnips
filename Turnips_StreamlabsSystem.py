@@ -191,7 +191,7 @@ def Execute(data):
                 quantity = turnipBalance
             else:
                 try:
-                    if int(data.GetParam(2)):
+                    if int(data.GetParam(2)) < 1:
                         message = ScriptSettings.InvalidAmountMessage
                         SendMessage(data, message)
                         return
