@@ -3,7 +3,6 @@
 *(special thanks to twitch.tv/hypherius for the idea)*
 
 ## Command Usage
-All commands can be used with either !turnip or !turnips
 
 **!turnips help** - Links you here! (*EX: !turnips help **OR** !turnips*)  
 **!turnips balance** - Tells you how many turnips you have. (*EX: !turnips balance*)  
