@@ -19,22 +19,22 @@
 **Currency Name** - The name of your "turnips" (Note: this value is designed to be singular, not plural).  
 **Cooldown** - How many seconds users have to wait to use the command again.  
 
-### Custom Message Variables
-*Custom variables are used using the following format: **${variable}**
+### Custom Message Variables  
+*Custom variables are used using the following format: **${variable}***  
 
-**${user}** - Gives the username of the user (EX: "Octatypes")
-**${currencyName}** - Gives the name of your Streamlabs Chatbot's currency (EX: "Coins")
-**${customCurrencyName}** - Gives the name of your custom Turnips currency (EX: "Turnip")
-**${cooldown}** - Gives the user's cooldown (EX: "5 seconds")
-**${turnipValue}** - Gives the current turnip price (EX: "27 Coins")
-**${userTurnipBalance}** - Gives the user's turnip balance (EX: "5 Turnips")
-**${timeUntilPriceUpdate}** - Gives the time until the next price update (EX: "5h 37m 21s")
-**${quantity}** - Gives the number of turnips that are being bought/sold (EX: "5 Turnips")
-**${price}** - Gives the cost of the turnips that are being bought (EX: "37 Coins")
-**${value}** - Gives the value of the turnips that are being sold (EX: "82 Coins")
+**${user}** - Gives the username of the user (EX: "Octatypes")  
+**${currencyName}** - Gives the name of your Streamlabs Chatbot's currency (EX: "Coins")  
+**${customCurrencyName}** - Gives the name of your custom Turnips currency (EX: "Turnip")  
+**${cooldown}** - Gives the user's cooldown (EX: "5 seconds")  
+**${turnipValue}** - Gives the current turnip price (EX: "27 Coins")  
+**${userTurnipBalance}** - Gives the user's turnip balance (EX: "5 Turnips")  
+**${timeUntilPriceUpdate}** - Gives the time until the next price update (EX: "5h 37m 21s")  
+**${quantity}** - Gives the number of turnips that are being bought/sold (EX: "5 Turnips")  
+**${price}** - Gives the cost of the turnips that are being bought (EX: "37 Coins")  
+**${value}** - Gives the value of the turnips that are being sold (EX: "82 Coins")  
 
-*Note: Be sure to pay attention to the examples, as many of these variables include units*
-*Note 2: cooldown, turnipValue, userTurnipBalance, quantity, price, and value will have units automatically pluralized by adding an "s" to the end.
+*Note: Be sure to pay attention to the examples, as many of these variables include units*  
+*Note 2: cooldown, turnipValue, userTurnipBalance, quantity, price, and value will have units automatically pluralized by adding an "s" to the end.  
   
 ### Custom Messages  
   
